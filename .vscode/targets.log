@@ -6,14 +6,16 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
 
-# Make data base, printed on Sat Aug  6 12:02:17 2022
+# Make data base, printed on Tue Aug  9 12:00:14 2022
 
 # Variables
 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
+ 
 ?F = $(notdir $?)
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
@@ -62,7 +64,7 @@ VSCODE_CODE_CACHE_PATH = /Users/vincentyip/Library/Application Support/Code/Cach
 # environment
 LOGNAME = vincentyip
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
@@ -140,9 +142,10 @@ VSCODE_PID = 561
 
 # Directories
 
-# . (device 16777234, inode 1154363): 15 files, no impossibilities.
+ 
+# . (device 16777234, inode 1462039): 18 files, no impossibilities.
 
-# 15 files, no impossibilities in 1 directories.
+# 18 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -161,7 +164,6 @@ all:
 # @ := all
 # automatic
 # % := 
- 
 # automatic
 # * := 
 # automatic
@@ -177,7 +179,7 @@ all:
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/10=10%
 #  commands to execute (from `Makefile', line 2):
-	gcc otter_engine.c init.c bitboards.c hashkeys.c board.c data.c -o chess
+	gcc otter_engine.c init.c bitboards.c hashkeys.c board.c data.c attack.c io.c movegen.c validate.c -o chess
 	
 
 # Not a target:
@@ -189,7 +191,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-06 12:02:08
+#  Last modified 2022-08-09 12:00:03
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -214,6 +216,6 @@ Makefile:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Aug  6 12:02:17 2022
+# Finished Make data base on Tue Aug  9 12:00:14 2022
 
  
