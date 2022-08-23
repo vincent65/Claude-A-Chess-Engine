@@ -132,8 +132,6 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 	int index = 0;
 	int pceIndex = 0;
 	
-	// printf("\n\nSide:%d\n",side);
-	
 	if(side == WHITE) {
 		
 		for(pceNum = 0; pceNum < pos->pceNum[wP]; ++pceNum) {
@@ -173,7 +171,7 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 		if(pos->castlePerm & WQCA) {
 			if(pos->pieces[D1] == EMPTY && pos->pieces[C1] == EMPTY && pos->pieces[B1] == EMPTY) {
 				if(!SqAttacked(E1,BLACK,pos) && !SqAttacked(D1,BLACK,pos) ) {
-					AddQuietMove(pos, MOVE(E1, D1, EMPTY, EMPTY, MFLAGCA), list);
+					AddQuietMove(pos, MOVE(E1, C1, EMPTY, EMPTY, MFLAGCA), list);
 				}
 			}
 		}
@@ -209,7 +207,6 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 		
 		// castling
 		if(pos->castlePerm &  BKCA) {
-			
 			if(pos->pieces[F8] == EMPTY && pos->pieces[G8] == EMPTY) {
 				if(!SqAttacked(E8,WHITE,pos) && !SqAttacked(F8,WHITE,pos) ) {
 					AddQuietMove(pos, MOVE(E8, G8, EMPTY, EMPTY, MFLAGCA), list);
@@ -230,7 +227,7 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 	pceIndex = LoopSlideIndex[side];
 	pce = LoopSlidePce[pceIndex++];
 	while( pce != 0) {
-		ASSERT(PieceValid(pce));
+		ASSERT(PieceValid(pce));		
 		
 		for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
 			sq = pos->pList[pce][pceNum];
@@ -243,7 +240,7 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 				while(!SQOFFBOARD(t_sq)) {				
 					// BLACK ^ 1 == WHITE       WHITE ^ 1 == BLACK
 					if(pos->pieces[t_sq] != EMPTY) {
-						if( (PieceCol[pos->pieces[t_sq]]) == (side ^ 1)) {
+						if( PieceCol[pos->pieces[t_sq]] == (side ^ 1)) {
 							AddCaptureMove(pos, MOVE(sq, t_sq, pos->pieces[t_sq], EMPTY, 0), list);
 						}
 						break;
@@ -278,7 +275,7 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 				
 				// BLACK ^ 1 == WHITE       WHITE ^ 1 == BLACK
 				if(pos->pieces[t_sq] != EMPTY) {
-					if((PieceCol[pos->pieces[t_sq]]) == (side ^ 1)) {
+					if( PieceCol[pos->pieces[t_sq]] == (side ^ 1)) {
 						AddCaptureMove(pos, MOVE(sq, t_sq, pos->pieces[t_sq], EMPTY, 0), list);
 					}
 					continue;
@@ -290,6 +287,5 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 		pce = LoopNonSlidePce[pceIndex++];
 	}
 }
-
 
 
