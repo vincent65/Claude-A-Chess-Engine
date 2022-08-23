@@ -236,15 +236,17 @@ void ResetBoard(S_BOARD *pos) {
 	}
 	
 	for(index = 0; index < 3; ++index) {
+		pos->pawns[index] = 0ULL;
+	}
+	for(index = 0; index < 2; index ++ ) { 
 		pos->bigPce[index] = 0;
 		pos->majPce[index] = 0;
 		pos->minPce[index] = 0;
 		pos->material[index] = 0;
-		pos->pawns[index] = 0ULL;
 	}
 	
 	for(index = 0; index < 13; ++index) {
-		pos->pceNum[index] = 0;
+		pos->pceNum[index] = 0ULL;
 	}
 	
 	pos->KingSq[WHITE] = pos->KingSq[BLACK] = NO_SQ;
