@@ -3,7 +3,7 @@
 
 #include "stdlib.h"
 
-#define DEBUG
+//#define DEBUG
 
 #ifndef DEBUG
 #define ASSERT(n)
@@ -213,6 +213,8 @@ extern int MakeMove(S_BOARD *pos, int move);
 extern void TakeMove(S_BOARD *pos);
 
 // perft.c 
+extern void PerftTest(int depth, S_BOARD *pos);
+
 
 #endif
 
