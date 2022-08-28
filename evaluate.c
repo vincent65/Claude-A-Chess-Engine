@@ -1,8 +1,8 @@
+// evaluate.c
 
-#include "defs.h"
 #include "stdio.h"
+#include "defs.h"
 
-//standard guide for engine to where to place pieces
 const int PawnTable[64] = {
 0	,	0	,	0	,	0	,	0	,	0	,	0	,	0	,
 10	,	10	,	0	,	-10	,	-10	,	0	,	10	,	10	,
@@ -58,50 +58,92 @@ const int Mirror64[64] = {
 0	,	1	,	2	,	3	,	4	,	5	,	6	,	7
 };
 
-#define MIRROR64(sq)  (Mirror64[sq])
-
-
-static int helper_loop(const S_BOARD *pos, int pce){
-    int pceNum = 0;
-    int sq = 0;
-    int score = 0;
-    for(pceNum = 0; pceNum < pos->pceNum[pce]; pceNum ++) {
-        sq = pos->pList[pce][pceNum];
-        ASSERT(SqOnBoard(sq));
-        if(pce == wP || pce == bP){
-            score += PawnTable[MIRROR64(SQ64(sq))];
-        }
-        else if(pce == wR || pce == bR){
-            score += RookTable[MIRROR64(SQ64(sq))];
-        }
-        else if(pce == wN || pce == bN) {
-            score += KnightTable[MIRROR64(SQ64(sq))];
-        }
-        else if(pce == wB || pce == bB){
-            score += BishopTable[MIRROR64(SQ64(sq))];
-        }
-    }
-    return score;
-}
+#define MIRROR64(sq) (Mirror64[(sq)])
 
 int EvalPosition(const S_BOARD *pos) {
-    
-    int score = pos->material[WHITE] - pos->material[BLACK];
 
-    score += helper_loop(pos, wP);
-    score -= helper_loop(pos, bP);
+	int pce;
+	int pceNum;
+	int sq;
+	int score = pos->material[WHITE] - pos->material[BLACK];
+	
+	pce = wP;	
+	for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+		sq = pos->pList[pce][pceNum];
+		ASSERT(SqOnBoard(sq));
+		score += PawnTable[SQ64(sq)];
+	}	
 
-    score += helper_loop(pos, wR);
-    score -= helper_loop(pos, bR);
+	pce = bP;	
+	for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+		sq = pos->pList[pce][pceNum];
+		ASSERT(SqOnBoard(sq));
+		score -= PawnTable[MIRROR64(SQ64(sq))];
+	}	
+	
+	pce = wN;	
+	for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+		sq = pos->pList[pce][pceNum];
+		ASSERT(SqOnBoard(sq));
+		score += KnightTable[SQ64(sq)];
+	}	
 
-    score += helper_loop(pos, wN);
-    score -= helper_loop(pos, bN);
+	pce = bN;	
+	for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+		sq = pos->pList[pce][pceNum];
+		ASSERT(SqOnBoard(sq));
+		score -= KnightTable[MIRROR64(SQ64(sq))];
+	}			
+	
+	pce = wB;	
+	for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+		sq = pos->pList[pce][pceNum];
+		ASSERT(SqOnBoard(sq));
+		score += BishopTable[SQ64(sq)];
+	}	
 
-    score += helper_loop(pos, wB);
-    score -= helper_loop(pos, bB);
+	pce = bB;	
+	for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+		sq = pos->pList[pce][pceNum];
+		ASSERT(SqOnBoard(sq));
+		score -= BishopTable[MIRROR64(SQ64(sq))];
+	}	
 
-    if(pos->side == WHITE){
-        return score;
-    }
-    return -score;
+	pce = wR;	
+	for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+		sq = pos->pList[pce][pceNum];
+		ASSERT(SqOnBoard(sq));
+		score += RookTable[SQ64(sq)];
+	}	
+
+	pce = bR;	
+	for(pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+		sq = pos->pList[pce][pceNum];
+		ASSERT(SqOnBoard(sq));
+		score -= RookTable[MIRROR64(SQ64(sq))];
+	}	
+	
+	if(pos->side == WHITE) {
+		return score;
+	} else {
+		return -score;
+	}	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

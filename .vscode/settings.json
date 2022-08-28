@@ -1,3 +1,11 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode"
+    "makefile.extensionOutputFolder": "./.vscode",
+    "files.associations": {
+        "__bit_reference": "c",
+        "__string": "c",
+        "ios": "c",
+        "string": "c",
+        "algorithm": "c",
+        "type_traits": "c"
+    }
 }

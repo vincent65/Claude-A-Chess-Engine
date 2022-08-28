@@ -28,7 +28,7 @@ int GetPvLine(const int depth, S_BOARD *pos){
     return cnt;
 }
 
-static void ClearPvTable(S_PVTABLE *table) {
+void ClearPvTable(S_PVTABLE *table) {
     S_PVENTRY *pvEntry;
 
     for(pvEntry = table->pTable; pvEntry < table->pTable + table->numEntries; pvEntry ++) {

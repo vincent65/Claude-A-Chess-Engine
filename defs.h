@@ -26,6 +26,8 @@ typedef unsigned long long U64;
 #define MAXGAMEMOVES 2048
 #define MAXPOSITIONMOVES 256
 #define MAXDEPTH 64
+#define INFINITE 30000
+#define MATE 29000
 
 #define START_FEN  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
@@ -130,6 +132,9 @@ typedef struct {
 	long nodes;
 	int quit;
 	int stopped;
+
+	float fh;
+	float fhf;
 } S_SEARCHINFO;
 
 /* GAME MOVE */
@@ -259,6 +264,7 @@ extern void InitPvTable(S_PVTABLE * table);
 extern int ProbePvTable(const S_BOARD *pos);
 extern void StorePvMove(const S_BOARD *pos, const int move);
 extern int GetPvLine(const int depth, S_BOARD *pos);
+extern void ClearPvTable(S_PVTABLE *table);
 
 //evaluate.c
 extern int EvalPosition(const S_BOARD *pos);
