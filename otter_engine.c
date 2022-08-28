@@ -7,6 +7,16 @@
 
 #define PERFTFEN "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
 
+int isRepetition(const S_BOARD *pos) {
+	int index = 0;
+	for(index = pos->hisPly - pos->fiftyMove; index < pos->hisPly - 1; index ++){
+	ASSERT(index >= 0 && index < MAXGAMEMOVES);
+		if(pos->posKey == pos->history[index].posKey){
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
 
 int main() {	
 
@@ -31,10 +41,19 @@ int main() {
 		else if (input[0]=='t'){
 			TakeMove(board);
 		}
+		else if(input[0] == 'p'){
+			PerftTest(4, board);
+		}
 		else{
 			move = ParseMove(input, board);
 			if(move != NOMOVE){
 				MakeMove(board,move);
+				// if(isRepetition(board)){
+				// 	printf("REPETITION");
+				// }
+			}
+			else{
+				printf("MOVE NOT PARSED");
 			}
 		}
 

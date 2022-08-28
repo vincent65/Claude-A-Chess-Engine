@@ -3,7 +3,7 @@
 
 #include "stdlib.h"
 
-//#define DEBUG
+#define DEBUG
 
 #ifndef DEBUG
 #define ASSERT(n)
@@ -60,6 +60,16 @@ typedef struct {
 } S_MOVELIST;
 
 typedef struct {
+	U64 posKey;
+	int move;
+} S_PVENTRY;
+
+typedef struct {
+	S_PVENTRY *pTable;
+	int numEntries;
+} S_PVTABLE;
+
+typedef struct {
 	
 	int move;
 	int castlePerm;
@@ -98,6 +108,7 @@ typedef struct {
 	// piece list
 	int pList[13][10];	
 	
+	S_PVTABLE PvTable[1];
 } S_BOARD;
 
 /* GAME MOVE */
@@ -218,6 +229,11 @@ extern void TakeMove(S_BOARD *pos);
 // perft.c 
 extern void PerftTest(int depth, S_BOARD *pos);
 
+//misc.c
+extern int GetTimeMs();
+
+//pvtable.c
+extern void InitPvTable(S_PVTABLE * table);
 
 #endif
 

@@ -262,7 +262,8 @@ void ResetBoard(S_BOARD *pos) {
 	pos->castlePerm = 0;
 	
 	pos->posKey = 0ULL;
-	
+	pos->PvTable->pTable = NULL;
+	InitPvTable(pos->PvTable);
 }
 void PrintBoard(const S_BOARD *pos) {
 	
