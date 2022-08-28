@@ -37,6 +37,23 @@ const int NumDir[13] = {
  0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8
 };
 
+int MoveExists(S_BOARD *pos, const int move) {
+	S_MOVELIST list[1];
+	GenerateAllMoves(pos, list);
+
+	int num = 0;
+	for(num = 0; num < list->count; num ++) {
+		if(!MakeMove(pos, list->moves[num].move)){
+			continue;
+		}
+		TakeMove(pos);
+		if(list->moves[num].move == move){
+			return TRUE;
+		}
+	}
+
+	return FALSE; 
+}
 
 static void AddQuietMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
 	list->moves[list->count].move = move;
