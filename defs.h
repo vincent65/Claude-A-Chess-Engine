@@ -111,7 +111,26 @@ typedef struct {
 	
 	S_PVTABLE PvTable[1];
 	int PvArray[MAXDEPTH];
+
+	int searchHistory[13][BRD_SQ_NUM];
+	int searchKillers[2][MAXDEPTH];
+
 } S_BOARD;
+
+
+typedef struct {
+	int starttime;
+	int stoptime;
+	int depth;
+	int depthset;
+	int timeset;
+	int movestogo;
+	int infinite;
+
+	long nodes;
+	int quit;
+	int stopped;
+} S_SEARCHINFO;
 
 /* GAME MOVE */
 
@@ -240,6 +259,12 @@ extern void InitPvTable(S_PVTABLE * table);
 extern int ProbePvTable(const S_BOARD *pos);
 extern void StorePvMove(const S_BOARD *pos, const int move);
 extern int GetPvLine(const int depth, S_BOARD *pos);
+
+//evaluate.c
+extern int EvalPosition(const S_BOARD *pos);
+
+//search.c
+extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
 
 
 #endif

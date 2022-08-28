@@ -8,14 +8,14 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Sat Aug 27 22:58:05 2022
+# Make data base, printed on Sun Aug 28 12:11:30 2022
 
 # Variables
 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
-# automatic
  
+# automatic
 ?F = $(notdir $?)
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
@@ -142,9 +142,9 @@ VSCODE_PID = 1906
 
 # Directories
 
-# . (device 16777232, inode 1462039): 23 files, no impossibilities.
+# . (device 16777232, inode 1462039): 25 files, no impossibilities.
 
-# 23 files, no impossibilities in 1 directories.
+# 25 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -179,7 +179,7 @@ all:
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/10=10%
 #  commands to execute (from `Makefile', line 2):
-	gcc otter_engine.c init.c bitboards.c hashkeys.c board.c data.c attack.c io.c movegen.c validate.c makemove.c perft.c misc.c pvtable.c -o chess
+	gcc otter_engine.c init.c bitboards.c hashkeys.c board.c data.c attack.c io.c movegen.c validate.c makemove.c perft.c misc.c pvtable.c evaluate.c search.c -o chess
 	
 
 # Not a target:
@@ -191,7 +191,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-27 22:57:43
+#  Last modified 2022-08-28 12:11:29
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -216,6 +216,6 @@ Makefile:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Aug 27 22:58:05 2022
+# Finished Make data base on Sun Aug 28 12:11:30 2022
 
  
