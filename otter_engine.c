@@ -16,8 +16,31 @@ int main() {
 	S_MOVELIST list[1];
 	
 	ParseFen(START_FEN,board);
-	PerftTest(4, board);
 	
+	char input[6];
+	int move = NOMOVE;
+
+	while(TRUE){
+		PrintBoard(board);
+		printf("Please enter a move > ");
+		fgets(input, 6, stdin);
+
+		if(input[0] == 'q'){
+			break;
+		}
+		else if (input[0]=='t'){
+			TakeMove(board);
+		}
+		else{
+			move = ParseMove(input, board);
+			if(move != NOMOVE){
+				MakeMove(board,move);
+			}
+		}
+
+
+		fflush(stdin);
+	}
 	
 	return 0;
 }
