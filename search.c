@@ -69,7 +69,62 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info) {
 }
 
 static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) {
-	return 0;
+	ASSERT(CheckBoard(pos)); 
+	
+	info->nodes++;
+
+	if(IsRepetition(pos) || pos->fiftyMove >= 100) {
+		return 0;
+	}
+	
+	if(pos->ply > MAXDEPTH - 1) {
+		return EvalPosition(pos);
+	}
+	
+	int Score = EvalPosition(pos);
+	if(Score  >= beta){
+		return beta;
+	}
+	if(Score > alpha) {
+		alpha = Score;
+	}
+
+	S_MOVELIST list[1];
+	GenerateAllCaps(pos, list);
+
+	int MoveNum = 0;
+	int Legal = 0;
+	int OldAlpha = alpha;
+	int BestMove = NOMOVE;
+	Score = -INFINITE;
+	int PvMove = ProbePvTable(pos);
+	
+	for(MoveNum = 0; MoveNum < list->count; ++MoveNum) {	
+       PickNextMove(MoveNum, list);
+        if ( !MakeMove(pos,list->moves[MoveNum].move))  {
+            continue;
+        }
+        
+		Legal++;
+		Score = -Quiescence( -beta, -alpha, pos, info);		
+        TakeMove(pos);
+		
+		if(Score > alpha) {
+			if(Score >= beta) {
+				if(Legal==1) {
+					info->fhf++;
+				}
+				info->fh++;	
+				return beta;
+			}
+			alpha = Score;
+			BestMove = list->moves[MoveNum].move;
+		}		
+    }
+	if(alpha != OldAlpha){
+		StorePvMove(pos, BestMove);
+	}
+	return alpha;
 }
 
 static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO *info, int DoNull) {
@@ -77,8 +132,8 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
 	ASSERT(CheckBoard(pos)); 
 	
 	if(depth == 0) {
-		info->nodes++;
-		return EvalPosition(pos);
+		return Quiescence(alpha, beta, pos, info);
+		// return EvalPosition(pos);
 	}
 	
 	info->nodes++;
