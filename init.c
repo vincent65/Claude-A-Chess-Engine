@@ -105,4 +105,5 @@ void AllInit() {
 	InitBitMasks();
 	InitHashKeys();
 	InitFilesRanksBrd();
+	InitMvvLa();
 }

@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "defs.h"
 
+
 #define MOVE(f,t,ca,pro,fl) ( (f) | ((t) << 7) | ( (ca) << 14 ) | ( (pro) << 20 ) | (fl))
 #define SQOFFBOARD(sq) (FilesBrd[(sq)]==OFFBOARD)
 
@@ -37,6 +38,25 @@ const int NumDir[13] = {
  0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8
 };
 
+//Most valuable victim, least valuable attacker
+const int VictimScore[13] = {0, 100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600};
+static int MvvLaScores[13][13];
+
+void InitMvvLa() {
+	int Attacker;
+	int Victim;
+	for(Attacker = wP; Attacker <= bK; Attacker++) {
+		for(Victim = wP; Victim <= bK; Victim ++) {
+			MvvLaScores[Victim][Attacker] = VictimScore[Victim] + 6 - (VictimScore[Attacker] / 100);
+		}
+	}
+	for(Attacker = wP; Attacker <= bK; Attacker++) {
+		for(Victim = wP; Victim <= bK; Victim ++) {
+			printf("%c x %c = %d\n", PceChar[Attacker], PceChar[Victim], MvvLaScores[Victim][Attacker]);
+		}
+	}
+}
+
 int MoveExists(S_BOARD *pos, const int move) {
 	S_MOVELIST list[1];
 	GenerateAllMoves(pos, list);
@@ -63,13 +83,13 @@ static void AddQuietMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
 
 static void AddCaptureMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
 	list->moves[list->count].move = move;
-	list->moves[list->count].score = 0;
+	list->moves[list->count].score = MvvLaScores[CAPTURED(move)][pos->pieces[FROMSQ(move)]];
 	list->count++;
 }
 
 static void AddEnPassantMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
 	list->moves[list->count].move = move;
-	list->moves[list->count].score = 0;
+	list->moves[list->count].score = 105;
 	list->count++;
 }
 

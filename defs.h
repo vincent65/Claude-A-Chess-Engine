@@ -3,7 +3,7 @@
 
 #include "stdlib.h"
 
-#define DEBUG
+//#define DEBUG
 
 #ifndef DEBUG
 #define ASSERT(n)
@@ -248,6 +248,7 @@ extern int PieceValid(const int pce);
 // movegen.c
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 extern int MoveExists(S_BOARD *pos, const int move);
+extern void InitMvvLa();
 
 // makemove.c
 extern int MakeMove(S_BOARD *pos, int move);
