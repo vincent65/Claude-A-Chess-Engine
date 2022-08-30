@@ -228,6 +228,7 @@ extern int ParseFen(char *fen, S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
 extern int CheckBoard(const S_BOARD *pos);
+extern S_BOARD* GenBoard();
 
 // attack.c
 extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);

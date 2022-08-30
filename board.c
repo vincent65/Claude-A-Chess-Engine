@@ -262,8 +262,13 @@ void ResetBoard(S_BOARD *pos) {
 	pos->castlePerm = 0;
 	
 	pos->posKey = 0ULL;
-	pos->PvTable->pTable = NULL;
-	InitPvTable(pos->PvTable);
+	//pos->PvTable->pTable = NULL;
+}
+
+S_BOARD* GenBoard() {
+	S_BOARD* board = (S_BOARD*)malloc(sizeof(S_BOARD));
+	board->PvTable->pTable = NULL;
+	return board;
 }
 void PrintBoard(const S_BOARD *pos) {
 	

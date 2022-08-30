@@ -3,7 +3,6 @@
 #include "stdio.h"
 #include "defs.h"
 
-
 #define MOVE(f,t,ca,pro,fl) ( (f) | ((t) << 7) | ( (ca) << 14 ) | ( (pro) << 20 ) | (fl))
 #define SQOFFBOARD(sq) (FilesBrd[(sq)]==OFFBOARD)
 
@@ -38,58 +37,75 @@ const int NumDir[13] = {
  0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8
 };
 
-//Most valuable victim, least valuable attacker
-const int VictimScore[13] = {0, 100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600};
-static int MvvLaScores[13][13];
+//Move ordering: PV Move, Capture and rank using MvvLVA, Search Killers (high beta), Search History Heuristic (high alpha)
+
+const int VictimScore[13] = { 0, 100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600 };
+static int MvvLvaScores[13][13];
 
 void InitMvvLa() {
 	int Attacker;
 	int Victim;
-	for(Attacker = wP; Attacker <= bK; Attacker++) {
-		for(Victim = wP; Victim <= bK; Victim ++) {
-			MvvLaScores[Victim][Attacker] = VictimScore[Victim] + 6 - (VictimScore[Attacker] / 100);
+	for(Attacker = wP; Attacker <= bK; ++Attacker) {
+		for(Victim = wP; Victim <= bK; ++Victim) {
+			MvvLvaScores[Victim][Attacker] = VictimScore[Victim] + 6 - ( VictimScore[Attacker] / 100);
 		}
-	}
-	for(Attacker = wP; Attacker <= bK; Attacker++) {
-		for(Victim = wP; Victim <= bK; Victim ++) {
-			printf("%c x %c = %d\n", PceChar[Attacker], PceChar[Victim], MvvLaScores[Victim][Attacker]);
-		}
-	}
+	}		
 }
 
 int MoveExists(S_BOARD *pos, const int move) {
+	
 	S_MOVELIST list[1];
-	GenerateAllMoves(pos, list);
-
-	int num = 0;
-	for(num = 0; num < list->count; num ++) {
-		if(!MakeMove(pos, list->moves[num].move)){
-			continue;
-		}
-		TakeMove(pos);
-		if(list->moves[num].move == move){
+    GenerateAllMoves(pos,list);
+      
+    int MoveNum = 0;
+	for(MoveNum = 0; MoveNum < list->count; ++MoveNum) {	
+       
+        if ( !MakeMove(pos,list->moves[MoveNum].move))  {
+            continue;
+        }        
+        TakeMove(pos);
+		if(list->moves[MoveNum].move == move) {
 			return TRUE;
 		}
-	}
-
-	return FALSE; 
+    }
+	return FALSE;
 }
 
 static void AddQuietMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
+
+	ASSERT(SqOnBoard(FROMSQ(move)));
+	ASSERT(SqOnBoard(TOSQ(move)));
+
 	list->moves[list->count].move = move;
-	list->moves[list->count].score = 0;
+	
+	if(pos->searchKillers[0][pos->ply] == move) {	
+		list->moves[list->count].score = 900000;
+	} else if(pos->searchKillers[1][pos->ply] == move) {	
+		list->moves[list->count].score = 800000;
+	} else {	
+		list->moves[list->count].score = pos->searchHistory[pos->pieces[FROMSQ(move)]][TOSQ(move)];
+	}
 	list->count++;
 }
 
 static void AddCaptureMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
+
+	ASSERT(SqOnBoard(FROMSQ(move)));
+	ASSERT(SqOnBoard(TOSQ(move)));
+	ASSERT(PieceValid(CAPTURED(move)));
+	
 	list->moves[list->count].move = move;
-	list->moves[list->count].score = MvvLaScores[CAPTURED(move)][pos->pieces[FROMSQ(move)]];
+	list->moves[list->count].score = MvvLvaScores[CAPTURED(move)][pos->pieces[FROMSQ(move)]] + 1000000;
 	list->count++;
 }
 
 static void AddEnPassantMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
+
+	ASSERT(SqOnBoard(FROMSQ(move)));
+	ASSERT(SqOnBoard(TOSQ(move)));
+	
 	list->moves[list->count].move = move;
-	list->moves[list->count].score = 105;
+	list->moves[list->count].score = 105 + 1000000;
 	list->count++;
 }
 
@@ -189,11 +205,13 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 				AddWhitePawnCapMove(pos, sq, sq+11, pos->pieces[sq + 11], list);
 			} 
 			
-			if(sq + 9 == pos->enPas) {
-				AddCaptureMove(pos, MOVE(sq,sq + 9,EMPTY,EMPTY,MFLAGEP), list);
-			} 
-			if(sq + 11 == pos->enPas) {
-				AddCaptureMove(pos, MOVE(sq,sq + 11,EMPTY,EMPTY,MFLAGEP), list);
+			if(pos->enPas != NO_SQ) {
+				if(sq + 9 == pos->enPas) {
+					AddEnPassantMove(pos, MOVE(sq,sq + 9,EMPTY,EMPTY,MFLAGEP), list);
+				} 
+				if(sq + 11 == pos->enPas) {
+					AddEnPassantMove(pos, MOVE(sq,sq + 11,EMPTY,EMPTY,MFLAGEP), list);
+				}
 			}
 		}
 		
@@ -233,12 +251,13 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 			if(!SQOFFBOARD(sq - 11) && PieceCol[pos->pieces[sq - 11]] == WHITE) {
 				AddBlackPawnCapMove(pos, sq, sq-11, pos->pieces[sq - 11], list);
 			} 
-			
-			if(sq - 9 == pos->enPas) {
-				AddCaptureMove(pos, MOVE(sq,sq - 9,EMPTY,EMPTY,MFLAGEP), list);
-			} 
-			if(sq - 11 == pos->enPas) {
-				AddCaptureMove(pos, MOVE(sq,sq - 11,EMPTY,EMPTY,MFLAGEP), list);
+			if(pos->enPas != NO_SQ) {
+				if(sq - 9 == pos->enPas) {
+					AddEnPassantMove(pos, MOVE(sq,sq - 9,EMPTY,EMPTY,MFLAGEP), list);
+				} 
+				if(sq - 11 == pos->enPas) {
+					AddEnPassantMove(pos, MOVE(sq,sq - 11,EMPTY,EMPTY,MFLAGEP), list);
+				}
 			}
 		}		
 		
