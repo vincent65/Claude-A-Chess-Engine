@@ -9,44 +9,8 @@ int main() {
 
 	AllInit();		
 	
-	// S_BOARD board[1];
-	S_BOARD* board = GenBoard();
-	InitPvTable(board->PvTable);
-	S_MOVELIST list[1];
-	S_SEARCHINFO info[1];
-	ParseFen(WAC2,board);
-	
-	char input[6];
-	int Move = NOMOVE;
-	int PvNum = 0;
-	int Max = 0;
-	while(TRUE) {
-		PrintBoard(board);
-		printf("Please enter a move > ");
-		fgets(input, 6, stdin);
+	UCI_Loop();
 		
-		if(input[0]=='q') {
-			break;
-		} else if(input[0]=='t') {
-			TakeMove(board);			
-		} else if(input[0]=='s') {
-			info->depth = 6;
-			SearchPosition(board, info);
-		} else {
-			Move = ParseMove(input, board);
-			if(Move != NOMOVE) {
-				StorePvMove(board, Move);
-				MakeMove(board,Move);
-			} else {
-				printf("Move Not Parsed:%s\n",input);
-			}
-		}	
-		
-		fflush(stdin);
-	}
-
-	free(board->PvTable->pTable);
-	
 	return 0;
 }
 

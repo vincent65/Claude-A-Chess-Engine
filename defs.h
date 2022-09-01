@@ -20,7 +20,7 @@ exit(1);}
 
 typedef unsigned long long U64;
 
-#define NAME "Vice 1.0"
+#define NAME "Claude-Engine Alpha v1.8.1"
 #define BRD_SQ_NUM 120
 
 #define MAXGAMEMOVES 2048
@@ -261,6 +261,7 @@ extern void PerftTest(int depth, S_BOARD *pos);
 
 //misc.c
 extern int GetTimeMs();
+extern void ReadInput(S_SEARCHINFO *info);
 
 //pvtable.c
 extern void InitPvTable(S_PVTABLE * table);
@@ -275,6 +276,8 @@ extern int EvalPosition(const S_BOARD *pos);
 //search.c
 extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
 
+//uci.c
+extern void UCI_Loop();
 
 #endif
 
