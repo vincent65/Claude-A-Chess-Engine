@@ -105,7 +105,7 @@ void ParsePosition(char *lineIn, S_BOARD *pos){
     PrintBoard(pos);
 }
 
-void UCI_Loop(){
+void UCI_Loop(S_BOARD *pos, S_SEARCHINFO *info){
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
@@ -114,10 +114,7 @@ void UCI_Loop(){
     printf("id author Vincent Yip\n");
     printf("uciok\n");
 
-    S_BOARD pos[1];
-    S_SEARCHINFO info[1];
-    InitPvTable(pos->PvTable);
-
+    
     while(TRUE){
         //clear and flush line to preprae to recieve new input
         memset(&line[0], 0, sizeof(line));
@@ -153,6 +150,4 @@ void UCI_Loop(){
         }
         if(info->quit) break;
     }
-    free(pos->PvTable->pTable);
-
 }

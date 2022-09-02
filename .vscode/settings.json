@@ -6,6 +6,7 @@
         "ios": "c",
         "string": "c",
         "algorithm": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "stdlib.h": "c"
     }
 }

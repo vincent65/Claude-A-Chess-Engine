@@ -20,14 +20,12 @@ exit(1);}
 
 typedef unsigned long long U64;
 
-#define NAME "Claude-Engine Alpha v1.8.1"
+#define NAME "Claude-Engine Alpha v1.8.2"
 #define BRD_SQ_NUM 120
 
 #define MAXGAMEMOVES 2048
 #define MAXPOSITIONMOVES 256
 #define MAXDEPTH 64
-#define INFINITE 30000
-#define MATE 29000
 
 #define START_FEN  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
@@ -36,7 +34,7 @@ enum { FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H, FILE_NONE
 enum { RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8, RANK_NONE };
 
 enum { WHITE, BLACK, BOTH };
-
+enum { UCIMODE, XBOARDMODE, CONSOLEMODE };
 enum {
   A1 = 21, B1, C1, D1, E1, F1, G1, H1,
   A2 = 31, B2, C2, D2, E2, F2, G2, H2,
@@ -110,31 +108,34 @@ typedef struct {
 	
 	// piece list
 	int pList[13][10];	
-	
-	S_PVTABLE PvTable[1];
-	int PvArray[MAXDEPTH];
 
+	S_PVTABLE PvTable[1];	
+	int PvArray[MAXDEPTH];
+	
 	int searchHistory[13][BRD_SQ_NUM];
 	int searchKillers[2][MAXDEPTH];
-
+	
 } S_BOARD;
 
-
 typedef struct {
+
 	int starttime;
 	int stoptime;
 	int depth;
-	int depthset;
 	int timeset;
 	int movestogo;
-	int infinite;
-
+	
 	long nodes;
+	
 	int quit;
 	int stopped;
-
+	
 	float fh;
 	float fhf;
+	
+	int GAME_MODE;
+	int POST_THINKING;
+
 } S_SEARCHINFO;
 
 /* GAME MOVE */
@@ -228,7 +229,6 @@ extern int ParseFen(char *fen, S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
 extern int CheckBoard(const S_BOARD *pos);
-extern S_BOARD* GenBoard();
 
 // attack.c
 extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
@@ -237,7 +237,7 @@ extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
 extern char *PrMove(const int move);
 extern char *PrSq(const int sq);
 extern void PrintMoveList(const S_MOVELIST *list);
-extern int ParseMove(char* ptrChar, S_BOARD *pos);
+extern int ParseMove(char *ptrChar, S_BOARD *pos);
 
 //validate.c
 extern int SqOnBoard(const int sq);
@@ -248,9 +248,9 @@ extern int PieceValid(const int pce);
 
 // movegen.c
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
+extern void GenerateAllCaps(const S_BOARD *pos, S_MOVELIST *list);
 extern int MoveExists(S_BOARD *pos, const int move);
 extern void InitMvvLa();
-extern void GenerateAllCaps(const S_BOARD *pos, S_MOVELIST *list);
 
 // makemove.c
 extern int MakeMove(S_BOARD *pos, int move);
@@ -259,39 +259,28 @@ extern void TakeMove(S_BOARD *pos);
 // perft.c 
 extern void PerftTest(int depth, S_BOARD *pos);
 
-//misc.c
+// search.c
+extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
+
+// misc.c 
 extern int GetTimeMs();
 extern void ReadInput(S_SEARCHINFO *info);
 
-//pvtable.c
-extern void InitPvTable(S_PVTABLE * table);
-extern int ProbePvTable(const S_BOARD *pos);
+// pvtable.c
+extern void InitPvTable(S_PVTABLE *table);
 extern void StorePvMove(const S_BOARD *pos, const int move);
+extern int ProbePvTable(const S_BOARD *pos);
 extern int GetPvLine(const int depth, S_BOARD *pos);
 extern void ClearPvTable(S_PVTABLE *table);
 
-//evaluate.c
+// evaluate.c
 extern int EvalPosition(const S_BOARD *pos);
 
-//search.c
-extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
+// uci.c 
+extern void UCI_Loop(S_BOARD *pos, S_SEARCHINFO *info);
 
-//uci.c
-extern void UCI_Loop();
+// xboard.c 
+extern void XBoard_Loop(S_BOARD *pos, S_SEARCHINFO *info);
+extern void Console_Loop(S_BOARD *pos, S_SEARCHINFO *info);
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
