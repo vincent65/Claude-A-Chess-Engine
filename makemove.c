@@ -1,5 +1,3 @@
-// makemove.c
-
 #include "defs.h"
 #include "stdio.h"
 

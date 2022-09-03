@@ -1,5 +1,3 @@
-// io.c
-
 #include "stdlib.h"
 #include "defs.h"
 #include "stdio.h"
@@ -106,15 +104,3 @@ void PrintMoveList(const S_MOVELIST *list) {
 	}
 	printf("MoveList Total %d Moves:\n\n",list->count);
 }
-
-
-
-
-
-
-
-
-
-
-
-

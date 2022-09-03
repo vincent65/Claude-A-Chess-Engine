@@ -1,4 +1,3 @@
-// data.c
 #include "defs.h"
 
 char PceChar[] = ".PNBRQKpnbrqk";
