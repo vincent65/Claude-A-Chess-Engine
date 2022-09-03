@@ -20,7 +20,7 @@ exit(1);}
 
 typedef unsigned long long U64;
 
-#define NAME "Claude-Engine Alpha v1.8.2"
+#define NAME "Claude Alpha v1.9"
 #define BRD_SQ_NUM 120
 
 #define MAXGAMEMOVES 2048
@@ -180,6 +180,8 @@ typedef struct {
 #define IsKn(p) (PieceKnight[(p)])
 #define IsKi(p) (PieceKing[(p)])
 
+#define MIRROR64(sq) (Mirror64[(sq)])
+
 /* GLOBALS */
 
 extern int Sq120ToSq64[BRD_SQ_NUM];
@@ -210,6 +212,15 @@ extern int PieceRookQueen[13];
 extern int PieceBishopQueen[13];
 extern int PieceSlides[13];
 
+extern int Mirror64[64];
+
+extern U64 FileBBMask[8];
+extern U64 RankBBMask[8];
+
+extern U64 BlackPassedMask[64];
+extern U64 WhitePassedMask[64];
+extern U64 IsolatedMask[64];
+
 /* FUNCTIONS */
 
 // init.c
@@ -229,6 +240,7 @@ extern int ParseFen(char *fen, S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
 extern int CheckBoard(const S_BOARD *pos);
+extern void MirrorBoard(S_BOARD *pos);
 
 // attack.c
 extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
@@ -250,11 +262,13 @@ extern int PieceValid(const int pce);
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 extern void GenerateAllCaps(const S_BOARD *pos, S_MOVELIST *list);
 extern int MoveExists(S_BOARD *pos, const int move);
-extern void InitMvvLa();
+extern void InitMvvLva();
 
 // makemove.c
 extern int MakeMove(S_BOARD *pos, int move);
 extern void TakeMove(S_BOARD *pos);
+extern void MakeNullMove(S_BOARD *pos);
+extern void TakeNullMove(S_BOARD *pos);
 
 // perft.c 
 extern void PerftTest(int depth, S_BOARD *pos);
@@ -277,7 +291,7 @@ extern void ClearPvTable(S_PVTABLE *table);
 extern int EvalPosition(const S_BOARD *pos);
 
 // uci.c 
-extern void UCI_Loop(S_BOARD *pos, S_SEARCHINFO *info);
+extern void Uci_Loop(S_BOARD *pos, S_SEARCHINFO *info);
 
 // xboard.c 
 extern void XBoard_Loop(S_BOARD *pos, S_SEARCHINFO *info);

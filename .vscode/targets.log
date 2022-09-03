@@ -104,7 +104,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.2007543.2007550
+XPC_SERClaude_NAME = application.com.microsoft.VSCode.2007543.2007550
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -143,7 +143,7 @@ VSCODE_PID = 1906
 
 # Directories
 
-# . (device 16777232, inode 1462039): 27 files, no impossibilities.
+# . (deClaude 16777232, inode 1462039): 27 files, no impossibilities.
 
 # 27 files, no impossibilities in 1 directories.
 

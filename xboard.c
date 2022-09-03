@@ -288,10 +288,32 @@ void Console_Loop(S_BOARD *pos, S_SEARCHINFO *info) {
 			printf("depth x - set depth to x\n");
 			printf("time x - set thinking time to x seconds (depth still applies if set)\n");
 			printf("view - show current depth and movetime settings\n");
+			printf("setboard x - set position to fen x\n");
 			printf("** note ** - to reset time and depth, set to 0\n");
 			printf("enter moves using b7b8q notation\n\n\n");
 			continue;
 		}
+		
+		if(!strcmp(command, "mirror")) { 
+			engineSide = BOTH; 
+			// MirrorEvalTest(pos);
+			continue; 
+		}
+		
+		if(!strcmp(command, "eval")) { 
+			PrintBoard(pos);
+			printf("Eval:%d",EvalPosition(pos));
+			MirrorBoard(pos);
+			PrintBoard(pos);
+			printf("Eval:%d",EvalPosition(pos));
+			continue; 
+		}
+		
+		if(!strcmp(command, "setboard")){
+			engineSide = BOTH;  
+			ParseFen(inBuf+9, pos); 
+			continue; 
+		}   
     
 		if(!strcmp(command, "quit")) { 
 			info->quit = TRUE;

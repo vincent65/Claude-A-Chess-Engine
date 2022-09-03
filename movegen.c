@@ -42,7 +42,7 @@ const int NumDir[13] = {
 const int VictimScore[13] = { 0, 100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600 };
 static int MvvLvaScores[13][13];
 
-void InitMvvLa() {
+void InitMvvLva() {
 	int Attacker;
 	int Victim;
 	for(Attacker = wP; Attacker <= bK; ++Attacker) {
